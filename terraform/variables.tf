@@ -27,3 +27,10 @@ variable "suffix" {
   default     = "8864"
   description = "First 4 digits of the AWS account ID"
 }
+
+variable "route53_zone_name" {
+  type        = string
+  default     = "zerodawndevops.com"
+  description = "Name of Route53 zone for DNS record"
+}
+
