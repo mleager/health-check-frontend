@@ -2,12 +2,13 @@ import React, { useState } from 'react';
 import './App.css';
 
 function App() {
+  const backendUrl = 'https://api.zerodawndevops.com';
   const [healthData, setHealthData] = useState(null);
   const [showFullHash, setShowFullHash] = useState(false);
 
   function fetchHealth() {
     console.log('Fetching health data...');
-    fetch('http://localhost:4000/health')
+    fetch(backendUrl + '/health')
       .then(response => {
         console.log('Response received:', response);
         console.log('Response headers:', response.headers);
