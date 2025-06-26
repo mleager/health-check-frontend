@@ -39,6 +39,8 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
     }
   }
 
+  aliases = [var.route53_zone_name]
+
   enabled             = true
   is_ipv6_enabled     = true
   default_root_object = "index.html"
@@ -79,7 +81,9 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
   }
 
   viewer_certificate {
-    cloudfront_default_certificate = true
+    acm_certificate_arn      = aws_acm_certificate.certificate.arn
+    ssl_support_method       = "sni-only"
+    minimum_protocol_version = "TLSv1.2_2021"
   }
 }
 
