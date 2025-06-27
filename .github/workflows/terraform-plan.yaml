@@ -2,8 +2,8 @@ name: Terraform Plan
 
 on:
   pull_request:
-    branches:
-      - main
+    # branches:
+    #   - main
 
 env:
   STATE_BUCKET: tf-state-8864
