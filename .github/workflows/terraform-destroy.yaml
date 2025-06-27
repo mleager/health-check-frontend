@@ -1,0 +1,38 @@
+name: Terraform Destroy
+
+on:
+  workflow_dispatch:
+    inputs:
+      confirm_destroy:
+        description: 'Type "DESTROY" to confirm resource destruction'
+        required: true
+
+env:
+  STATE_BUCKET: tf-state-8864
+  PROJECT_NAME: frontend-health-check
+  AWS_REGION: us-east-1
+  ENVIRONMENT: development
+
+jobs:
+  terraform:
+    runs-on: ubuntu-latest
+    # environment: ${{ env.ENVIRONMENT }}
+    permissions:
+      contents: write
+    defaults:
+      run:
+        working-directory: ./terraform
+    steps:
+      - name: Terraform Destroy
+        uses: mleager/tf-shared-actions/.github/actions/terraform-destroy@main
+        with:
+          bucket: ${{ env.STATE_BUCKET }}
+          key: ${{ env.PROJECT_NAME }}/terraform.tfstate
+          region: ${{ env.AWS_REGION }}
+          var_file: terraform.tfvars.${{ env.ENVIRONMENT }}
+          confirm_destroy: ${{ github.event.inputs.confirm_destroy }}
+          make_commit_comment: true
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
