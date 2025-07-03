@@ -78,8 +78,8 @@ data "aws_iam_policy_document" "oidc_permissions" {
       # "s3:ListBucketVersions",
     ]
     resources = [
-      "arn:aws:s3:::${local.s3_bucket.name}",
-      "arn:aws:s3:::${local.s3_bucket.name}/*"
+      "arn:aws:s3:::${local.s3_bucket}",
+      "arn:aws:s3:::${local.s3_bucket}/*"
     ]
   }
 
