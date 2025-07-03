@@ -30,7 +30,7 @@ data "aws_iam_policy_document" "assume_github_oidc_apply" {
 }
 
 resource "aws_iam_role" "github_oidc_role_apply" {
-  name               = "oidc-${var.environment}-${var.project_name}-apply"
+  name               = "oidc-${var.project_name}-${var.environment}-apply"
   assume_role_policy = data.aws_iam_policy_document.assume_github_oidc_apply.json
   description        = "Allows GH Actions from ${var.project_name} to deploy frontend assets to S3 + CloudFront"
 }
@@ -60,7 +60,7 @@ data "aws_iam_policy_document" "assume_github_oidc_plan" {
 }
 
 resource "aws_iam_role" "github_oidc_role_plan" {
-  name               = "oidc-${var.environment}-${var.project_name}-plan"
+  name               = "oidc-${var.project_name}-${var.environment}-plan"
   assume_role_policy = data.aws_iam_policy_document.assume_github_oidc_plan.json
   description        = "Allows GH Actions from ${var.project_name} to plan and destroy frontend assets"
 }
