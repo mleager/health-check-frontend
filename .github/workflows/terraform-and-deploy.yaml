@@ -1,13 +1,14 @@
 name: Infra and Frontend Deploy
 
 on:
-  push:
-    branches:
-      - main
+  # push:
+  #   branches:
+  #     - main
+  workflow_dispatch:
 
 env:
   STATE_BUCKET: tf-state-8864
-  PROJECT_NAME: frontend-health-check
+  PROJECT_NAME: health-check-frontend
   AWS_REGION: us-east-1
   ENVIRONMENT: development
   S3_BUCKET: frontend-assets-development-8864

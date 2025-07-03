@@ -12,7 +12,7 @@ variable "region" {
 
 variable "project_name" {
   type        = string
-  default     = "s3-cloudfront"
+  default     = "health-check-frontend"
   description = "The name of the project"
 }
 
