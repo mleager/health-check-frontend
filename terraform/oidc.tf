@@ -67,16 +67,9 @@ resource "aws_iam_role" "github_oidc_role_plan" {
 
 data "aws_iam_policy_document" "oidc_permissions" {
   statement {
-    sid    = "AllowUploadAndGetForS3"
-    effect = "Allow"
-    actions = [
-      "s3:*"
-      # "s3:GetObject",
-      # "s3:PutObject",
-      # "s3:ListBucket",
-      # "s3:GetBucketLocation",
-      # "s3:ListBucketVersions",
-    ]
+    sid     = "AllowS3"
+    effect  = "Allow"
+    actions = ["s3:*"]
     resources = [
       "arn:aws:s3:::${local.s3_bucket.bucket}",
       "arn:aws:s3:::${local.s3_bucket.bucket}/*"
@@ -84,57 +77,109 @@ data "aws_iam_policy_document" "oidc_permissions" {
   }
 
   statement {
-    sid    = "AllowCloudFrontAccess"
+    sid    = "AllowRequiredPermissions"
     effect = "Allow"
     actions = [
-      "cloudfront:*"
-      # "cloudfront:AssociateAlias",
-      # "cloudfront:CreateCloudFrontOriginAccessIdentity",
-      # "cloudfront:CreateDistribution",
-      # "cloudfront:CreateInvalidation",
-      # "cloudfront:DeleteCloudFrontOriginAccessIdentity",
-      # "cloudfront:DeleteDistribution",
-      # "cloudfront:GetDistribution",
-      # "cloudfront:TagResource",
-      # "cloudfront:UntagResource",
-      # "cloudfront:UpdateDistribution",
+      "cloudfront:*",
+      "acm:*",
+      "route53:*",
+      "ec2:*",
     ]
-    resources = ["arn:aws:cloudfront::${local.account_id}:distribution/*"]
+    resources = ["*"]
   }
 
   statement {
-    sid    = "AllowACMCertPermissions"
-    effect = "Allow"
-    actions = [
-      "acm:*"
-      # "acm:RequestCertificate",
-      # "acm:RevokeCertificate",
-      # "acm:DeleteCertificate",
-      # "acm:DescribeCertificate",
-      # "acm:GetCertificate",
-      # "acm:ListCertificates",
-      # "acm:UpdateCertificate",
-      # "acm:UpdateCertificateOptions",
-      # "acm:DescribeCertificateOptions",
-      # "acm:AddTagsToCertificate",
-      # "acm:ListTagsForCertificate",
-      # "acm:RemoveTagsFromCertificate"
-    ]
-    resources = ["arn:aws:acm:${var.region}:${local.account_id}:certificate/*"]
+    sid       = "AllowIAM"
+    effect    = "Allow"
+    actions   = ["iam:*"]
+    resources = ["arn:aws:iam::${local.account_id}:*"]
   }
 
-  statement {
-    sid    = "AllowRoute53Permissions"
-    effect = "Allow"
-    actions = [
-      "route53:*"
-      # "route53:GetHostedZone",
-      # "route53:ListHostedZones",
-      # "route53:ChangeResourceRecordSets",
-      # "route53:ListResourceRecordSets",
-    ]
-    resources = ["arn:aws:route53:::hostedzone/${data.aws_route53_zone.primary.zone_id}"]
-  }
+  #   statement {
+  #     sid    = "AllowUploadAndGetForS3"
+  #     effect = "Allow"
+  #     actions = [
+  #       "s3:*"
+  #       # "s3:GetObject",
+  #       # "s3:PutObject",
+  #       # "s3:ListBucket",
+  #       # "s3:GetBucketLocation",
+  #       # "s3:ListBucketVersions",
+  #     ]
+  #     resources = [
+  #       "arn:aws:s3:::${local.s3_bucket.bucket}",
+  #       "arn:aws:s3:::${local.s3_bucket.bucket}/*"
+  #     ]
+  #   }
+  #
+  #   statement {
+  #     sid    = "AllowCloudFrontAccess"
+  #     effect = "Allow"
+  #     actions = [
+  #       "cloudfront:*"
+  #       # "cloudfront:AssociateAlias",
+  #       # "cloudfront:CreateCloudFrontOriginAccessIdentity",
+  #       # "cloudfront:CreateDistribution",
+  #       # "cloudfront:CreateInvalidation",
+  #       # "cloudfront:DeleteCloudFrontOriginAccessIdentity",
+  #       # "cloudfront:DeleteDistribution",
+  #       # "cloudfront:GetDistribution",
+  #       # "cloudfront:TagResource",
+  #       # "cloudfront:UntagResource",
+  #       # "cloudfront:UpdateDistribution",
+  #     ]
+  #     resources = ["arn:aws:cloudfront::${local.account_id}:distribution/*"]
+  #   }
+  #
+  #   statement {
+  #     sid    = "AllowACMCertPermissions"
+  #     effect = "Allow"
+  #     actions = [
+  #       "acm:*"
+  #       # "acm:RequestCertificate",
+  #       # "acm:RevokeCertificate",
+  #       # "acm:DeleteCertificate",
+  #       # "acm:DescribeCertificate",
+  #       # "acm:GetCertificate",
+  #       # "acm:ListCertificates",
+  #       # "acm:UpdateCertificate",
+  #       # "acm:UpdateCertificateOptions",
+  #       # "acm:DescribeCertificateOptions",
+  #       # "acm:AddTagsToCertificate",
+  #       # "acm:ListTagsForCertificate",
+  #       # "acm:RemoveTagsFromCertificate"
+  #     ]
+  #     resources = ["arn:aws:acm:${var.region}:${local.account_id}:certificate/*"]
+  #   }
+  #
+  #   statement {
+  #     sid    = "AllowRoute53Permissions"
+  #     effect = "Allow"
+  #     actions = [
+  #       "route53:*"
+  #       # "route53:GetHostedZone",
+  #       # "route53:ListHostedZones",
+  #       # "route53:ChangeResourceRecordSets",
+  #       # "route53:ListResourceRecordSets",
+  #     ]
+  #     resources = ["arn:aws:route53:::hostedzone/${data.aws_route53_zone.primary.zone_id}"]
+  #   }
+  #
+  #   statement {
+  #     sid    = "AllowVPCPermissions"
+  #     effect = "Allow"
+  #     actions = [
+  #       "ec2:*"
+  #     ]
+  #     resources = ["*"]
+  #   }
+  #
+  # statement {
+  #   sid       = "AllowIAM"
+  #   effect    = "Allow"
+  #   actions   = ["iam:*"]
+  #   resources = ["arn:aws:iam::${local.account_id}:*"]
+  # }
 }
 
 resource "aws_iam_policy" "github_oidc_role_policy" {
