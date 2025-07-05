@@ -84,15 +84,9 @@ data "aws_iam_policy_document" "oidc_permissions" {
       "acm:*",
       "route53:*",
       "ec2:*",
+      "iam:*"
     ]
     resources = ["*"]
-  }
-
-  statement {
-    sid       = "AllowIAM"
-    effect    = "Allow"
-    actions   = ["iam:*"]
-    resources = ["arn:aws:iam::${local.account_id}:*"]
   }
 
   #   statement {
