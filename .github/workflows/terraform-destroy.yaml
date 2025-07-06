@@ -17,8 +17,6 @@ jobs:
       ENVIRONMENT: development
       PROJECT_NAME: ${{ github.event.repository.name }}
     # environment: ${{ env.ENVIRONMENT }}
-    env:
-      PROJECT_NAME: ${{ github.event.repository.name }}
     permissions:
       contents: write
       id-token: write
