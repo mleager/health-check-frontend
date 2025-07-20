@@ -9,13 +9,12 @@ on:
 
   workflow_dispatch:
 
-env:
-  ENVIRONMENT: development
-  AWS_REGION: us-east-1
-
 jobs:
   invalidate_cache:
     runs-on: ubuntu-latest
+    env:
+      ENVIRONMENT: development
+      AWS_REGION: us-east-1
     environment: ${{ env.ENVIRONMENT }}
     permissions:
       contents: read
