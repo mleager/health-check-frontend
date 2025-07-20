@@ -23,12 +23,3 @@ dist-ssr
 *.sln
 *.sw?
 
-# Terraform
-.terraform/
-*.tfstate
-*.tfstate.*
-*.tfvars
-
-# Old Workflows
-.github/workflows/terraform*
-
