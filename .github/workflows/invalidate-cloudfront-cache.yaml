@@ -1,0 +1,47 @@
+name: Invalidate Cloudfront Cache
+
+on:
+  workflow_run:
+    workflows:
+      - Sync to S3
+    types:
+      - completed
+
+  workflow_dispatch:
+
+env:
+  ENVIRONMENT: development
+  AWS_REGION: us-east-1
+
+jobs:
+  invalidate_cache:
+    runs-on: ubuntu-latest
+    environment: ${{ env.ENVIRONMENT }}
+    permissions:
+      contents: read
+      id-token: write
+
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion =='success' }}
+
+    steps:
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/${{ secrets.OIDC_ROLE }}
+        aws-region: ${{ env.AWS_REGION }}
+
+    - name: Get Cloudfront Distribution ID
+      id: get-dist-id
+      run: |
+        echo "🔍 Retrieving CloudFront distribution ID from SSM..."
+        DIST_ID=$(aws ssm get-parameter --name /${{ env.ENVIRONMENT }}/frontend/cloudfront_distribution_id --with-decryption --output text --query 'Parameter.Value' --region ${{ env.AWS_REGION }})
+        echo "dist_id=$DIST_ID" >> $GITHUB_OUTPUT
+        echo "✅ Found distribution ID: $DIST_ID"
+
+    - name: Invalidate Cloudfront Cache
+      run: |
+        echo "🚀 Creating CloudFront invalidation for distribution: ${{ steps.get-dist-id.outputs.dist_id }}"
+        invalidation_id=$(aws cloudfront create-invalidation --distribution-id ${{ steps.get-dist-id.outputs.dist_id }} --paths "/*" --query 'Invalidation.Id' --output text)
+        echo "✅ Invalidation created with ID: $invalidation_id"
+        echo "⏳ Cache invalidation typically takes 10-15 minutes to complete"
+

@@ -1,0 +1,34 @@
+name: Sync to S3
+
+on:
+  push:
+    branches:
+    - main
+
+  workflow_dispatch:
+
+env:
+  PROJECT_NAME: ${{ github.events.repository.name }}
+  ENVIRONMENT: development
+  S3_BUCKET: frontend-assests
+  AWS_REGION: us-east-1
+
+jobs:
+  sync_to_s3:
+    runs-on: ubuntu-latest
+    environment: ${{ env.ENVIRONMENT }}
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+    - name: Sync React App to S3
+      uses: mleager/tf-shared-actions/.github/actions/s3-deploy@main
+      with:
+        oidc_role: ${{ secrets.OIDC_ROLE }}
+        aws_account_id: ${{ secrets.AWS_ACCOUNT_ID }}
+        project_name: ${{ env.PROJECT_NAME }}
+        environment: ${{ env.ENVIRONMENT }}
+        s3_bucket: ${{ env.S3_BUCKET }}-${{ env.ENVIRONMENT }}-8864
+        region: ${{ env.AWS_REGION }}
+
