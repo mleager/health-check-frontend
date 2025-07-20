@@ -7,15 +7,16 @@ on:
 
   workflow_dispatch:
 
+env:
+  PROJECT_NAME: ${{ github.event.repository.name }}
+  ENVIRONMENT: development
+  S3_BUCKET: frontend-assets
+  AWS_REGION: us-east-1
+
 jobs:
   sync_to_s3:
     runs-on: ubuntu-latest
-    env:
-      PROJECT_NAME: ${{ github.events.repository.name }}
-      ENVIRONMENT: development
-      S3_BUCKET: frontend-assests
-      AWS_REGION: us-east-1
-    environment: ${{ env.ENVIRONMENT }}
+    # environment: ${{ env.ENVIRONMENT }}
     permissions:
       contents: read
       id-token: write
