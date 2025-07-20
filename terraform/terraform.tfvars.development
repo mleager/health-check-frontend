@@ -1,7 +1,0 @@
-environment       = "development"
-region            = "us-east-1"
-project_name      = "health-check-frontend"
-bucket_name       = "frontend-assets"
-suffix            = "8864"
-route53_zone_name = "zerodawndevops.com"
-

@@ -29,3 +29,6 @@ dist-ssr
 *.tfstate.*
 *.tfvars
 
+# Old Workflows
+.github/workflows/terraform*
+
